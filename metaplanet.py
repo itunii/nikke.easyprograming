@@ -4,7 +4,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from datetime import datetime, timedelta
 
-# データ取得のための設定
+# APIの指定
 def get_stock_data(ticker, start_date, end_date):
     stock_data = yf.download(ticker, start=start_date, end=end_date)
     stock_data['Return'] = stock_data['Adj Close'].pct_change()
@@ -19,20 +19,20 @@ def get_crypto_data(symbol, timeframe, since):
     df['Return'] = df['close'].pct_change()
     return df
 
-# 日付設定
+# 日付指定
 end_date = datetime.now()
 start_date = end_date - timedelta(days=180)  # 半年分
 
-# 株価データ取得
+# 株価データをYfinanceから取得
 stock_ticker = '3350.T'  # レオン自動機のティッカーシンボル
 stock_data = get_stock_data(stock_ticker, start_date, end_date)
 
-# ビットコインデータ取得
+# ビットコインデーターの取得
 crypto_symbol = 'BTC/USDT'  # ビットコイン対米ドル
 since = int(start_date.timestamp() * 1000)
 crypto_data = get_crypto_data(crypto_symbol, '1d', since)
 
-# データ結合
+# グラフ化
 combined_df = stock_data[['Return']].join(crypto_data[['Return']], how='inner', lsuffix='_stock', rsuffix='_crypto')
 combined_df.dropna(inplace=True)
 
